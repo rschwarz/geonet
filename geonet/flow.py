@@ -14,10 +14,10 @@ def find_arc_flow(net, demand):
     '''
 
     # TODO: is this still necessary?
-    nods = sorted(dg.nodes())
-    edgs = sorted(dg.edges())
+    nods = sorted(net.dg.nodes())
+    edgs = sorted(net.dg.edges())
     
-    im = nx.incidence_matrix(dg, nodelist=nods, edgelist=edgs, oriented=True)
+    im = nx.incidence_matrix(net.dg, nodelist=nods, edgelist=edgs, oriented=True)
     im = im[1:, :] # skip any (redundant) row
     
     dem = np.array([demand.get(n, 0.0) for n in nods])
