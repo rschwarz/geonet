@@ -16,6 +16,11 @@ class Net:
         self.dg.add_nodes_from(nodes)
         self.dg.add_edges_from(arcs)
 
+    def get_nodes(self):
+        return self.dg.nodes()
+
+    def get_arcs(self):
+        return self.dg.edges()
 
 class SteinerTree(Net):
     '''Steiner tree with some node positions fixed'''
