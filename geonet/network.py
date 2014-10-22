@@ -4,7 +4,7 @@ Data structures for (Steiner) tree networks
 
 import networkx as nx
 
-class Net:
+class Net(object):
     '''Network'''
 
     def __init__(self, nodes, arcs):
@@ -36,7 +36,7 @@ class SteinerTree(Net):
             self.dg.node[k]['pos'] = v
 
     def is_steiner(self, n):
-        return not self.is_terminal(node)
+        return not self.is_terminal(n)
 
     def is_terminal(self, n):
         return 'pos' in self.dg.node[n]
