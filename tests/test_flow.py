@@ -1,3 +1,5 @@
+import pytest
+
 from geonet.network import Net
 from geonet.flow import find_arc_flow
 
@@ -16,3 +18,11 @@ def test_treeflow():
     assert flows['c', 'd'] == 12
     assert flows['d', 'e'] == 12
     assert flows['d', 'f'] == 0
+
+def test_imbalance():
+    '''Check exception for unbalanced data'''
+    net = Net('ab', ['ab'])
+    demand = {'a':4}
+    with pytest.raises(AssertionError) as e:
+        flows = find_arc_flow(net, demand)
+    assert 'flow not balanced' in str(e.value)
