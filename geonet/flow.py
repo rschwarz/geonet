@@ -2,6 +2,8 @@
 Utilities for network flow
 '''
 
+import networkx as nx
+import numpy as np
 import scipy as sp
 
 def find_arc_flow(net, demand):
@@ -12,6 +14,8 @@ def find_arc_flow(net, demand):
     net: a (tree) network
     demand: maps node IDs to demand (or supply if negative)
     '''
+
+    assert sum(demand.values()) == 0.0, 'flow not balanced'
 
     # TODO: is this still necessary?
     nods = sorted(net.dg.nodes())
