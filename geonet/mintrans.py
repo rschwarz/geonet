@@ -3,6 +3,7 @@ Minimize transport (momentum).
 '''
 
 import cvxpy as cvx
+import numpy as np
 
 def steiner_pos(tree, flows, flow_exp=1.0, verbose=False):
     '''minimize flow-weighted length of network with steiner positions
@@ -16,16 +17,16 @@ def steiner_pos(tree, flows, flow_exp=1.0, verbose=False):
     '''
     # TODO: rewrite with vector notation an no loops
 
-    nodes = sorted(dg.nodes())
-    arcs = sorted(dg.edges())
+    nodes = sorted(tree.get_nodes())
+    arcs = sorted(tree.get_arcs())
 
     # create variables for 2d-positions
     x = {n:cvx.Variable(2) for n in nodes}
     
     # fix positions of terminals
-    fixed_pos = [x[n] == np.array(net.dg.node[n]['pos'])
+    fixed_pos = [x[n] == np.array(tree.dg.node[n]['pos'])
                  for n in nodes
-                 if net.is_terminal(n)]
+                 if tree.is_terminal(n)]
 
     constraints = fixed_pos
     
