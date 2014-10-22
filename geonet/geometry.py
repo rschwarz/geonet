@@ -30,3 +30,12 @@ def angle_between(v1, v2):
         else:
             return np.pi
     return angle
+
+
+def star_angles(center, leaves, pos):
+    '''compute angles between leave arcs'''
+    cpos = np.array(pos[center])
+    lpos = [np.array(pos[n]) for n in leaves]
+    dirs = [l - cpos for l in lpos]
+    pairs = zip(dirs, dirs[1:] + dirs[:1])
+    return [angle_between(x,y) for x,y in pairs]
