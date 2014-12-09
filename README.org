@@ -1,0 +1,30 @@
+#+TITLE: GeoNet - Layout and design for networks with nonlinear flow
+
+* Purpose
+This library (implemented in Python) provides tools to find a suitable
+layout and design for a flow network. The main motivation comes from
+gas pipeline networks, where a diameter is chosen for each segment.
+The friction establishes a nonlinear relationship between flow along
+edges and pressure at nodes. Using Steiner trees with variable
+positions of the Steiner nodes, a cost-minimal network can be found.
+
+* Features
+  - utilities for networks and plane geometry
+  - network flow
+  - convex optimization to minimize transport given a topology
+  - wrapper for GeoSteiner program
+
+* Dependencies
+Many of these are only needed for specific features.
+** Python libraries
+   - [[http://www.numpy.org/][numpy]]
+   - [[http://www.scipy.org/][scipy]]
+   - [[https://networkx.github.io/][networkx]]
+   - [[http://www.cvxpy.org/][cvxpy]]
+
+** external sofware
+   - [[http://www.diku.dk/~martinz/geosteiner/][GeoSteiner]]
+
+* Licensing
+All of my code is distributed with MIT License. GeoSteiner is only
+called as a subprocess.
