@@ -47,3 +47,38 @@ class SteinerTree(Net):
 
     def is_terminal(self, n):
         return 'pos' in self.dg.node[n]
+
+    def get_terminal_nodes(self):
+        return [n for n in self.get_nodes() if self.is_terminal(n)]
+
+    def get_steiner_nodes(self):
+        return [n for n in self.get_nodes() if self.is_steiner(n)]
+
+    def is_full_steiner_topology(self):
+        '''or is the tree degenerate?
+
+        three criteria are applied:
+        1. number of Steiner nodes equals the number of terminals - 2
+        2. Steiner nodes have degree 3
+        3. Terminals have degree 1 and are connected to Steiner nodes
+        '''
+        terms = self.get_terminal_nodes()
+        steins = self.get_steiner_nodes()
+
+        # special cases for n < 3
+        if len(terms) < 3 and len(steins) == 0:
+            return True
+        # general case
+        if len(steins) != len(terms) - 2:
+            return False
+        if any(self.get_degree(s) != 3 for s in steins):
+            return False
+        if any(self.get_degree(t) != 1 for t in terms):
+            return False
+        for t in terms:
+            neighbors = self.get_neighbors(t)
+            assert len(neighbors) == 1
+            n = neighbors[0]
+            if self.is_terminal(n):
+                return False
+        return True
