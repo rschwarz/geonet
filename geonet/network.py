@@ -22,6 +22,13 @@ class Net(object):
     def get_arcs(self):
         return self.dg.edges()
 
+    def get_degree(self, n):
+        return self.dg.degree(n)
+
+    def get_neighbors(self, n):
+        return self.dg.predecessors(n) + self.dg.successors(n)
+
+
 class SteinerTree(Net):
     '''Steiner tree with some node positions fixed'''
 
