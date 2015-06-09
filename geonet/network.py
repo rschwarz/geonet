@@ -28,6 +28,10 @@ class Net(object):
     def get_neighbors(self, n):
         return self.dg.predecessors(n) + self.dg.successors(n)
 
+    def __repr__(self):
+        _nodes = ', '.join([repr(n) for n in self.get_nodes()])
+        _arcs = ', '.join([repr(a) for a in self.get_arcs()])
+        return 'Net([%s], [%s])' % (_nodes, _arcs)
 
 class SteinerTree(Net):
     '''Steiner tree with some node positions fixed'''
