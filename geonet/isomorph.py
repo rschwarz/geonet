@@ -2,7 +2,9 @@
 Graph ismorphism for (full Steiner) tress.
 '''
 
-from geonet.network import Net
+import networkx as nx
+
+from geonet.network import Net, SteinerTree
 
 def are_isomorphic(tree1, tree2):
     '''checks isomorphism for two given (undirected) trees
@@ -127,3 +129,42 @@ def enum_Steiner_only(n):
                 nclasses[j] += 1
 
     return nclasses, reprtree
+
+
+def label_fst(tree):
+    '''Computes a labeling of a Full Steiner Tree.
+
+    This can be used to check for isomorphic trees (having same
+    label).
+
+    Following "Fampa et al.: A specialized branch-and-bound algorithm
+    for the Euclidean Steiner tree problem in n-space", algorithm 4.
+    '''
+    assert isinstance(tree, SteinerTree)
+    terms = tree.get_terminal_nodes()
+    stein = tree.get_steiner_nodes()
+
+    # build rooted (binary) tree with lexicographical ordering
+    label = {}
+    for t in terms:
+        label[t] = t
+
+    root = min(terms)
+
+    # set labels for all Steiner nodes
+    g = tree.dg.to_undirected()
+    bfs = list(nx.bfs_edges(g, root))[::-1]
+    for i in range(len(bfs)/2):
+        t1, h1 = bfs[2*i]
+        t2, h2 = bfs[2*i + 1]
+        assert t1 == t2
+        assert tree.is_steiner(t1)
+        assert t1 not in label
+        l1, l2 = label[h1], label[h2]
+        label[t1] = (l1, l2) if l1 < l2 else (l2, l1)
+
+    # return label of Steiner node adjacent to root
+    t, h = bfs[-1]
+    assert t == root
+    assert tree.is_steiner(h)
+    return label[h]

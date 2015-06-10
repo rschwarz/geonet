@@ -4,8 +4,8 @@ import pytest
 
 import networkx as nx
 
-from geonet.network import Net
-from geonet.isomorph import are_isomorphic, enum_Steiner_only
+from geonet.network import Net, SteinerTree
+from geonet.isomorph import are_isomorphic, enum_Steiner_only, label_fst
 
 # tests for are_isomorphic
 
@@ -64,3 +64,24 @@ def test_enum_Steiner_only_small():
 
     for t1, t2 in combinations(reprtree.values(), 2):
         assert not are_isomorphic(t1, t2)
+
+# tests for label_fst
+
+def test_label_fst():
+    '''Label small FSTs and check results'''
+    O = (0, 0) # dummy location
+
+    Y = SteinerTree('abcs', ['as', 'bs', 'cs'], {'a':O, 'b':O, 'c':O})
+    assert label_fst(Y) == ('b', 'c')
+
+    H = SteinerTree('abcdst', ['as', 'bs', 'st', 'tc', 'td'],
+                    {'a':O, 'b':O, 'c':O, 'd': O})
+    assert label_fst(H) == ('b', ('c', 'd'))
+
+    # from Fampa, figure 4
+    t8 = SteinerTree('123456789abcdefg',
+                     ['1a', 'ab', 'ac', 'bd', 'b2', 'ce', 'cf', 'd3', 'd4',
+                      'eg', 'e5', 'f6', 'f7', 'g8', 'g9'],
+                     {'1':O, '2':O, '3':O, '4':O, '5':O, '6':O, '7':O,
+                      '8':O, '9':O})
+    assert label_fst(t8) == ((('2', ('3', '4')), (('5', ('8', '9')), ('6', '7'))))
