@@ -83,7 +83,7 @@ def are_isomorphic(tree1, tree2):
         label += 1
 
 
-def enum_Steiner_only(n):
+def enum_Steiner_only(n, steiner_ids=None):
     '''Enumerate all representative trees.
 
     This considers only the trees interconnecting the Steiner nodes
@@ -92,31 +92,37 @@ def enum_Steiner_only(n):
     Following "Fampa et al.: A specialized branch-and-bound algorithm
     for the Euclidean Steiner tree problem in n-space", algorithm 1.
     '''
+    # optional node IDs for Steiner nodes
+    if steiner_ids is None:
+        steiner_ids = ['s%02d' % d for d in range(1, n - 1)]
+    assert len(steiner_ids) == n - 2
+
     # resulting data structures
     nclasses = {} # key: number of Steiner nodes
     reprtree = {} # key: (number of Steiner nodes, class id)
 
     # initialize with single representative for 2 Steiner nodes
-    cur_nodes = [1, 2]
-    cur_edges = [(1, 2)]
+    cur_nodes = steiner_ids[:2]
+    cur_edges = [tuple(cur_nodes)]
     nclasses[2] = 1
     reprtree[2, 0] = Net(cur_nodes, cur_edges)
 
     # incrementally add another Steiner node
     for j in range(3, n - 2 + 1):
         nclasses[j] = 0
-        cur_nodes.append(j)
+        cur_nodes.append(steiner_ids[j - 1])
 
         # for each (smaller) representative tree
         for k in range(nclasses[j - 1]):
             # for each possible connection point
             for i in range(1, j):
                 # enforce maximum degree of 3
-                if reprtree[j - 1, k].get_degree(i) == 3:
+                if reprtree[j - 1, k].get_degree(steiner_ids[i - 1]) == 3:
                     continue
 
                 # tentatively build new representative
-                cur_edges = reprtree[j - 1, k].get_arcs() + [(i, j)]
+                new_edge = (steiner_ids[i - 1], steiner_ids[j - 1])
+                cur_edges = reprtree[j - 1, k].get_arcs() + [new_edge]
                 cur_tree = Net(cur_nodes, cur_edges)
 
                 # skip tree if isomorphic to other representative
