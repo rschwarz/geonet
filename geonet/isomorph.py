@@ -2,12 +2,14 @@
 Graph ismorphism for (full Steiner) tress.
 '''
 
+from geonet.network import Net
+
 def are_isomorphic(tree1, tree2):
     '''checks isomorphism for two given (undirected) trees
 
     Implemented by uncritical copy from "Fampa et al.: A specialized
     branch-and-bound algorithm for the Euclidean Steiner tree problem
-    in n-space"
+    in n-space", algorithm 2.
     '''
     t1 = tree1.dg.to_undirected()
     t2 = tree2.dg.to_undirected()
@@ -77,3 +79,51 @@ def are_isomorphic(tree1, tree2):
             else:
                 break
         label += 1
+
+
+def enum_Steiner_only(n):
+    '''Enumerate all representative trees.
+
+    This considers only the trees interconnecting the Steiner nodes
+    for full Steiner trees of n terminals.
+
+    Following "Fampa et al.: A specialized branch-and-bound algorithm
+    for the Euclidean Steiner tree problem in n-space", algorithm 1.
+    '''
+    # resulting data structures
+    nclasses = {} # key: number of Steiner nodes
+    reprtree = {} # key: (number of Steiner nodes, class id)
+
+    # initialize with single representative for 2 Steiner nodes
+    cur_nodes = [1, 2]
+    cur_edges = [(1, 2)]
+    nclasses[2] = 1
+    reprtree[2, 0] = Net(cur_nodes, cur_edges)
+
+    # incrementally add another Steiner node
+    for j in range(3, n - 2 + 1):
+        nclasses[j] = 0
+        cur_nodes.append(j)
+
+        # for each (smaller) representative tree
+        for k in range(nclasses[j - 1]):
+            # for each possible connection point
+            for i in range(1, j):
+                # enforce maximum degree of 3
+                if reprtree[j - 1, k].get_degree(i) == 3:
+                    continue
+
+                # tentatively build new representative
+                cur_edges = reprtree[j - 1, k].get_arcs() + [(i, j)]
+                cur_tree = Net(cur_nodes, cur_edges)
+
+                # skip tree if isomorphic to other representative
+                if any(are_isomorphic(cur_tree, reprtree[j, l])
+                       for l in range(nclasses[j])):
+                    continue
+
+                # add representative for new class
+                reprtree[j, nclasses[j]] = cur_tree
+                nclasses[j] += 1
+
+    return nclasses, reprtree
