@@ -18,6 +18,10 @@ def steiner_pos(tree, flow, diams, costs, pres_bds, C=1.0, verbose=False):
     - pres_bds : uniform pressure bounds
     - C        : constant coefficient in Weymouth equation
     - verbose  : show solver output
+
+    returns:
+    - positions of Steiner nodes
+    - value of objective in solution
     '''
     assert all(flow[a] > 0.0 for a in tree.get_arcs())
 
@@ -75,7 +79,7 @@ def steiner_pos(tree, flow, diams, costs, pres_bds, C=1.0, verbose=False):
 
     if prob.status == cvx.OPTIMAL:
         pos = {n:np.array(x[n].value)[:, 0].tolist() for n in tree.get_nodes()}
-        return pos
+        return pos, prob.value
     else:
         print 'Problem not solved:', prob.status
-        return None
+        return None, None
