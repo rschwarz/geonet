@@ -2,6 +2,8 @@
 Graph ismorphism for (full Steiner) tress.
 '''
 
+from itertools import permutations
+
 import networkx as nx
 
 from geonet.network import Net, SteinerTree
@@ -180,3 +182,68 @@ def label_fst(tree):
     assert t == root
     assert tree.is_steiner(h)
     return label[h]
+
+
+def enum(term_pos, steiner_ids=None):
+    '''Enumerate all representative full steiner trees.
+
+    - term_pos: a dict mapping terminal node IDs to their (fixed)
+    positions.
+    - steiner_ids: optional list of Steiner node IDs. Must be of correct
+    length.
+
+    Following "Fampa et al.: A specialized branch-and-bound algorithm
+    for the Euclidean Steiner tree problem in n-space", algorithm 3.
+    '''
+    terms = sorted(term_pos.keys())
+    nt = len(terms)
+    assert nt >= 3
+    if steiner_ids is None:
+        steiner_ids = default_steiner_ids(nt)
+    ns = nt - 2
+    assert len(steiner_ids) == ns
+
+    # compute all representative trees connecting the Steiner nodes
+    nclasses, reprtree = enum_Steiner_only(len(terms), steiner_ids)
+    nc = nclasses[ns]
+
+    # resulting data structure of representatives, indexed by label
+    trees = {}
+
+    # for each class of 'inner tree'
+    for c in range(nc):
+        tree = reprtree[ns, c]
+        deg1 = [s for s in steiner_ids if tree.get_degree(s) == 1]
+        deg2 = [s for s in steiner_ids if tree.get_degree(s) == 2]
+        deg3 = [s for s in steiner_ids if tree.get_degree(s) == 3]
+        assert 2*len(deg1) + len(deg2) == nt
+
+        cur_nodes = terms + steiner_ids
+        cur_edges = tree.get_arcs()
+
+        # (naive) enumeration of all permutations of terminals
+        for perm in permutations(terms):
+            # TODO: skip those permutations that yield the same tree,
+            # i.e. where two terminals are swapped that are connected to
+            # the same degree-1 Steiner node
+
+            # connect all terminals to Steiner nodes in permutation order
+            new_edges = []
+            K = len(deg1)
+            for k in range(K):
+                new_edges.append((perm[2*k], deg1[k]))
+                new_edges.append((perm[2*k + 1], deg1[k]))
+            for l in range(len(deg2)):
+                new_edges.append((perm[2*K + l], deg2[l]))
+            new_tree = SteinerTree(cur_nodes, cur_edges + new_edges, term_pos)
+
+            # check if isomorphic to saved tree
+            label = label_fst(new_tree)
+            if label in trees:
+                # TODO: select lexicographically smaller tree
+                continue
+
+            # save tree
+            trees[label] = new_tree
+
+    return trees

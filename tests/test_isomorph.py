@@ -6,7 +6,7 @@ import networkx as nx
 
 from geonet.network import Net, SteinerTree
 from geonet.isomorph import are_isomorphic, enum_Steiner_only, label_fst, \
-    default_steiner_ids
+    default_steiner_ids, enum
 
 def test_default_steiner_ids():
     '''Check some valid properties of IDs'''
@@ -107,3 +107,22 @@ def test_label_fst():
                      {'1':O, '2':O, '3':O, '4':O, '5':O, '6':O, '7':O,
                       '8':O, '9':O})
     assert label_fst(t8) == ((('2', ('3', '4')), (('5', ('8', '9')), ('6', '7'))))
+
+# tests for enum
+
+def test_enum():
+    '''Check the number of classes of FSTs'''
+
+    # maps nterms to nFSTs (from Bhaskaran's thesis), might correspond
+    # to A001147 from oeis.org
+    data = [
+        # (3, 1), # broken?
+        (4, 3),
+        (5, 15),
+        (6, 105),
+        # (7, 945), # too expensive
+    ]
+    for x, y in data:
+        pos = {k:None for k in range(x)}
+        trees = enum(pos)
+        assert len(trees) == y
