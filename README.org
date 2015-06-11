@@ -1,4 +1,4 @@
-#+TITLE: GeoNet - Layout and design for networks with nonlinear flow
+#+TITLE: GeoNet - Geometric layout and design for pipe networks with nonlinear flow
 
 * Purpose
 This library (implemented in Python) provides tools to find a suitable
@@ -13,6 +13,8 @@ positions of the Steiner nodes, a cost-minimal network can be found.
   - network flow
   - convex optimization to minimize transport given a topology
   - wrapper for GeoSteiner program
+  - convex optimization to find junction location with minimum pipe cost
+  - enumeration of full Steiner tree topologies (with isomorphism check)
 
 * Dependencies
 Many of these are only needed for specific features.
@@ -24,7 +26,8 @@ Many of these are only needed for specific features.
 
 ** external sofware
    - [[http://www.diku.dk/~martinz/geosteiner/][GeoSteiner]]
+   - [[http://www.gurobi.com][Gurobi]] (via Python interface)
 
 * Licensing
 All of my code is distributed with MIT License. GeoSteiner is only
-called as a subprocess.
+called as a subprocess. Gurobi offers an academic license.
