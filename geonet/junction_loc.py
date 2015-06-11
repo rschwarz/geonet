@@ -7,6 +7,8 @@ Solved as second-order cone program with cvxpy.
 import cvxpy as cvx
 import numpy as np
 
+from geonet.flow import make_forward_flow
+
 def steiner_pos(tree, flow, diams, costs, pres_bds, C=1.0, verbose=False):
     '''minimize diameter cost of network with junction locations.
 
@@ -23,6 +25,7 @@ def steiner_pos(tree, flow, diams, costs, pres_bds, C=1.0, verbose=False):
     - positions of Steiner nodes
     - value of objective in solution
     '''
+    tree, flow = make_forward_flow(tree, flow)
     assert all(flow[a] > 0.0 for a in tree.get_arcs())
 
     # Node positions
