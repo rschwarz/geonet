@@ -1,3 +1,5 @@
+import pytest
+
 from geonet.network import Net, SteinerTree
 
 def test_Net():
@@ -60,3 +62,16 @@ def test_full_steiner_tree():
                     {'a':O, 'b':O, 'c':O, 'd':O})
 
     assert not X.is_full_steiner_topology()
+
+def test_positions():
+    pos = {'a':1, 'b':2, 'c':3}
+    star = SteinerTree('abcs', ['as', 'bs', 'cs'], pos)
+
+    assert star.get_position('a') == 1
+    assert star.get_position('b') == 2
+    assert star.get_position('c') == 3
+    assert star.get_terminal_positions() == pos
+
+    with pytest.raises(KeyError) as e:
+        star.get_position('s')
+    assert 'Not a terminal' in e.value.message

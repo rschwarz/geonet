@@ -58,6 +58,14 @@ class SteinerTree(Net):
     def get_steiner_nodes(self):
         return [n for n in self.get_nodes() if self.is_steiner(n)]
 
+    def get_position(self, t):
+        if not self.is_terminal(t):
+            raise KeyError("Not a terminal: %s" % t)
+        return self.dg.node[t]['pos']
+
+    def get_terminal_positions(self):
+        return {t: self.get_position(t) for t in self.get_terminal_nodes()}
+
     def is_full_steiner_topology(self):
         '''or is the tree degenerate?
 
