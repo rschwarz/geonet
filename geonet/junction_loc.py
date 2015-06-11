@@ -44,6 +44,7 @@ def steiner_pos(tree, flow, diams, costs, pres_bds, C=1.0, verbose=False):
     # second order cone constraints
     socs = []
 
+    assert len(diams) == len(costs)
     N = len(diams)
     J = list(range(N - 1))
     gg = [(costs[j+1]*diams[j]**-5 - costs[j]*diams[j+1]**-5) for j in J]
