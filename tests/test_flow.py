@@ -46,3 +46,5 @@ def test_make_forward_flow():
 
     assert ('s', 'c') in new_tree.get_arcs()
     assert ('c', 's') not in new_tree.get_arcs()
+
+    assert all(new_flow[a] > 0.0 for a in new_tree.get_arcs())

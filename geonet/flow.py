@@ -57,4 +57,4 @@ def make_forward_flow(tree, flow):
             new_flow[v, u] = -1.0 * flow[u, v]
 
     new_tree = SteinerTree(new_nodes, new_arcs, new_pos)
-    return new_tree, new_pos
+    return new_tree, new_flow
