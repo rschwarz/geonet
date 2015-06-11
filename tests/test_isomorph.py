@@ -70,7 +70,7 @@ def test_enum_Steiner_only_small():
     # terminals) and compare with results from paper
     nclasses, reprtree = enum_Steiner_only(8)
     assert 0 not in nclasses
-    assert 1 not in nclasses
+    assert nclasses[1] == 1
     assert nclasses[2] == 1
     assert nclasses[3] == 1
     assert nclasses[4] == 2
@@ -116,7 +116,7 @@ def test_enum():
     # maps nterms to nFSTs (from Bhaskaran's thesis), might correspond
     # to A001147 from oeis.org
     data = [
-        # (3, 1), # broken?
+        (3, 1),
         (4, 3),
         (5, 15),
         (6, 105),

@@ -109,14 +109,14 @@ def enum_Steiner_only(n, steiner_ids=None):
     nclasses = {} # key: number of Steiner nodes
     reprtree = {} # key: (number of Steiner nodes, class id)
 
-    # initialize with single representative for 2 Steiner nodes
-    cur_nodes = steiner_ids[:2]
-    cur_edges = [tuple(cur_nodes)]
-    nclasses[2] = 1
-    reprtree[2, 0] = Net(cur_nodes, cur_edges)
+    # initialize with single representative for 1 Steiner node
+    cur_nodes = steiner_ids[:1]
+    cur_edges = []
+    nclasses[1] = 1
+    reprtree[1, 0] = Net(cur_nodes, cur_edges)
 
     # incrementally add another Steiner node
-    for j in range(3, n - 2 + 1):
+    for j in range(2, n - 2 + 1):
         nclasses[j] = 0
         cur_nodes.append(steiner_ids[j - 1])
 
@@ -209,6 +209,14 @@ def enum(term_pos, steiner_ids=None):
 
     # resulting data structure of representatives, indexed by label
     trees = {}
+
+    # special case: 3 terminals, 1 Steiner node
+    if nt == 3:
+        s = steiner_ids[0]
+        edges = [(t, s) for t in terms]
+        tree = SteinerTree(terms + steiner_ids, edges, term_pos)
+        trees[label_fst(tree)] = tree
+        return trees
 
     # for each class of 'inner tree'
     for c in range(nc):
