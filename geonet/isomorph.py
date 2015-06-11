@@ -6,6 +6,12 @@ import networkx as nx
 
 from geonet.network import Net, SteinerTree
 
+
+def default_steiner_ids(n):
+    '''Steiner node IDs for FSTs with n terminals'''
+    return ['s%02d' % d for d in range(1, n - 1)]
+
+
 def are_isomorphic(tree1, tree2):
     '''checks isomorphism for two given (undirected) trees
 
@@ -94,7 +100,7 @@ def enum_Steiner_only(n, steiner_ids=None):
     '''
     # optional node IDs for Steiner nodes
     if steiner_ids is None:
-        steiner_ids = ['s%02d' % d for d in range(1, n - 1)]
+        steiner_ids = default_steiner_ids(n)
     assert len(steiner_ids) == n - 2
 
     # resulting data structures

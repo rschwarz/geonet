@@ -5,7 +5,29 @@ import pytest
 import networkx as nx
 
 from geonet.network import Net, SteinerTree
-from geonet.isomorph import are_isomorphic, enum_Steiner_only, label_fst
+from geonet.isomorph import are_isomorphic, enum_Steiner_only, label_fst, \
+    default_steiner_ids
+
+def test_default_steiner_ids():
+    '''Check some valid properties of IDs'''
+    assert len(default_steiner_ids(0)) == 0
+    assert len(default_steiner_ids(1)) == 0
+    assert len(default_steiner_ids(2)) == 0
+
+    id3 = default_steiner_ids(3)
+    assert len(id3) == 1
+    assert sorted(id3) == id3
+    assert len(set(id3)) == len(id3)
+
+    id4 = default_steiner_ids(4)
+    assert len(id4) == 2
+    assert sorted(id4) == id4
+    assert len(set(id4)) == len(id4)
+
+    id5 = default_steiner_ids(5)
+    assert len(id5) == 3
+    assert sorted(id5) == id5
+    assert len(set(id5)) == len(id5)
 
 # tests for are_isomorphic
 
