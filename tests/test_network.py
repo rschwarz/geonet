@@ -1,6 +1,6 @@
 import pytest
 
-from geonet.network import Net, SteinerTree
+from geonet.network import Net, SteinerTree, merge_pos
 
 def test_Net():
     nodes = ['a', 'b', 'c', 'd']
@@ -75,3 +75,17 @@ def test_positions():
     with pytest.raises(KeyError) as e:
         star.get_position('s')
     assert 'Not a terminal' in e.value.message
+
+def test_merge_pos():
+    term_pos = {'a':1, 'b':2, 'c':3}
+    star = SteinerTree('abcs', ['as', 'bs', 'cs'], term_pos)
+
+    steiner_pos = {'s': 4}
+
+    pos = merge_pos(star, steiner_pos)
+
+    assert len(pos) == 4
+    assert pos['a'] == 1
+    assert pos['b'] == 2
+    assert pos['c'] == 3
+    assert pos['s'] == 4

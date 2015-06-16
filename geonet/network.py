@@ -94,3 +94,9 @@ class SteinerTree(Net):
             if self.is_terminal(n):
                 return False
         return True
+
+def merge_pos(tree, steiner_pos):
+    '''build dict as union from terminal and steiner positions'''
+    pos = dict(tree.get_terminal_positions())
+    pos.update(steiner_pos)
+    return pos
