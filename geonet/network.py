@@ -109,6 +109,13 @@ class SteinerTree(Net):
                 return False
         return True
 
+    def __repr__(self):
+        _nodes = ', '.join([repr(n) for n in self.get_nodes()])
+        _arcs = ', '.join([repr(a) for a in self.get_arcs()])
+        _pos = ', '.join('%s:%s' % (t, self.get_position(t))
+                         for t in self.get_terminal_nodes())
+        return 'SteinerTree([%s], [%s], {%s})' % (_nodes, _arcs, _pos)
+
     def __eq__(self, other):
         return super(SteinerTree, self).__eq__(other) and \
             other.get_terminal_positions() == self.get_terminal_positions()
