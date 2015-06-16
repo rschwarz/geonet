@@ -4,6 +4,7 @@ Utilities for geometry
 
 import numpy as np
 
+
 # from http://stackoverflow.com/questions/2827393/
 def unit_vector(vector):
     '''Returns the unit vector of the vector.'''
@@ -39,3 +40,8 @@ def star_angles(center, leaves, pos):
     dirs = [l - cpos for l in lpos]
     pairs = zip(dirs, dirs[1:] + dirs[:1])
     return [angle_between(x,y) for x,y in pairs]
+
+
+def distance(x1, x2):
+    '''Euclidean distance'''
+    return np.linalg.norm(np.array(x1) - np.array(x2))

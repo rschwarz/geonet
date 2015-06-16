@@ -1,7 +1,7 @@
 import numpy as np
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose, assert_almost_equal
 
-from geonet.geometry import unit_vector, angle_between, star_angles
+from geonet.geometry import unit_vector, angle_between, star_angles, distance
 
 def test_unit_vector():
     v1 = np.array([1, 0, 0])
@@ -33,3 +33,19 @@ def test_star_angles():
     #             aob,     boc,   coa
     angles = [np.pi/2, np.pi/2, np.pi]
     assert_allclose(star_angles(center, leaves, pos), angles, atol=1e-6)
+
+
+def test_distance():
+    # works with tuples in any dimension
+    assert_almost_equal(distance((0,), (0,)), 0.0)
+    assert_almost_equal(distance((3,), (4,)), 1.0)
+
+    assert_almost_equal(distance((5,6), (5,6)), 0.0)
+    assert_almost_equal(distance((3,3), (3,4)), 1.0)
+    assert_almost_equal(distance((0,0), (3,4)), 5.0)
+
+    assert_almost_equal(distance((5,6,7), (5,6,7)), 0.0)
+    assert_almost_equal(distance((5,6,7), (5,6,5)), 2.0)
+
+    # works with numpy arrays
+    assert_almost_equal(distance(np.array([0, 1, 2]), ([0, 1, 0])), 2.0)
