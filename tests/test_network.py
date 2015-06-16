@@ -89,3 +89,38 @@ def test_merge_pos():
     assert pos['b'] == 2
     assert pos['c'] == 3
     assert pos['s'] == 4
+
+def test_equality():
+    # testing just Net
+    assert Net('', []) == Net('', [])
+    assert not Net('', []) != Net('', [])
+
+    assert Net('a', []) == Net('a', [])
+    assert Net('a', []) != Net('', [])
+    assert Net('a', []) != Net('A', [])
+
+    assert Net('abc', ['ab']) == Net('abc', ['ab'])
+    assert Net('abc', ['ab']) == Net('cba', ['ab'])
+    assert Net('abc', ['ab']) != Net('abc', ['ba'])
+    assert Net('abc', ['ab']) != Net('abc', ['bc'])
+    assert Net('abc', ['ab', 'bc']) == Net('abc', ['bc', 'ab'])
+
+    # testing SteinerTree with no terminals
+    assert SteinerTree('', [], {}) == SteinerTree('', [], {})
+    assert not SteinerTree('', [], {}) != SteinerTree('', [], {})
+
+    assert SteinerTree('a', [], {}) == SteinerTree('a', [], {})
+    assert SteinerTree('a', [], {}) != SteinerTree('', [], {})
+    assert SteinerTree('a', [], {}) != SteinerTree('A', [], {})
+
+    assert SteinerTree('abc', ['ab'], {}) == SteinerTree('abc', ['ab'], {})
+    assert SteinerTree('abc', ['ab'], {}) == SteinerTree('cba', ['ab'], {})
+    assert SteinerTree('abc', ['ab'], {}) != SteinerTree('abc', ['ba'], {})
+    assert SteinerTree('abc', ['ab'], {}) != SteinerTree('abc', ['bc'], {})
+    assert SteinerTree('abc', ['ab', 'bc'], {}) == SteinerTree('abc', ['bc', 'ab'], {})
+
+    # testing SteinerTree with terminals
+    assert SteinerTree('abc', ['ab'], {'a':0}) == SteinerTree('abc', ['ab'], {'a':0})
+    assert not SteinerTree('abc', ['ab'], {'a':0}) != SteinerTree('abc', ['ab'], {'a':0})
+    assert SteinerTree('abc', ['ab'], {'a':0}) != SteinerTree('abc', ['ab'], {})
+    assert SteinerTree('abc', ['ab'], {'a':0}) != SteinerTree('abc', ['ab'], {'a':1})

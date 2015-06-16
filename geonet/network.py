@@ -33,6 +33,20 @@ class Net(object):
         _arcs = ', '.join([repr(a) for a in self.get_arcs()])
         return 'Net([%s], [%s])' % (_nodes, _arcs)
 
+    # http://stackoverflow.com/questions/390250/
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            # unfortunately, networkx.DiGraph does not implement __eq__
+            return all([
+                other.dg.node == self.dg.node,
+                other.dg.edge == self.dg.edge,
+            ])
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 class SteinerTree(Net):
     '''Steiner tree with some node positions fixed'''
 
@@ -94,6 +108,11 @@ class SteinerTree(Net):
             if self.is_terminal(n):
                 return False
         return True
+
+    def __eq__(self, other):
+        return super(SteinerTree, self).__eq__(other) and \
+            other.get_terminal_positions() == self.get_terminal_positions()
+
 
 def merge_pos(tree, steiner_pos):
     '''build dict as union from terminal and steiner positions'''
