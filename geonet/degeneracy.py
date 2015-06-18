@@ -4,10 +4,9 @@ Detecting degeneracy and merging zero-length edges.
 
 from geonet.network import SteinerTree, merge_pos
 from geonet.geometry import distance
+from geonet.constants import abstol
 
-_abstol = 1e-4
-
-def degenerate_edges(tree, steiner_pos, abstol=_abstol):
+def degenerate_edges(tree, steiner_pos, abstol=abstol):
     '''list of edges with (numerically) zero length'''
     assert isinstance(tree, SteinerTree)
     pos = merge_pos(tree, steiner_pos)
@@ -17,11 +16,11 @@ def degenerate_edges(tree, steiner_pos, abstol=_abstol):
             and distance(pos[u], pos[v]) <= abstol]
 
 
-def is_degenerate(tree, steiner_pos, abstol=_abstol):
+def is_degenerate(tree, steiner_pos, abstol=abstol):
     return degenerate_edges(tree, steiner_pos, abstol) != []
 
 
-def merged(tree, steiner_pos, abstol=_abstol):
+def merged(tree, steiner_pos, abstol=abstol):
     '''build new tree that merges all degenerate edges.
 
     when merging an edge, the lexicographically smaller node will
