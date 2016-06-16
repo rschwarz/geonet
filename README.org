@@ -1,5 +1,7 @@
 #+TITLE: GeoNet - Geometric layout and design for pipe networks with nonlinear flow
 
+Work is now continued in the Julia project [[https://github.com/leethargo/PipeLayout.jl][PipeLayout]].
+
 * Purpose
 This library (implemented in Python) provides tools to find a suitable
 layout and design for a flow network. The main motivation comes from
