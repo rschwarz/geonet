@@ -15,7 +15,8 @@ def geosteiner(pos):
     def parse_ps(output):
         lines = output.splitlines()
         no_pre = dropwhile(lambda l:' % fs' not in l, lines)
-        no_post = takewhile(lambda l:'Euclidean SMT' not in l, no_pre)
+        end_kwds = ['Euclidean SMT', '(Steiner Minimal']
+        no_post = takewhile(lambda l: all(kw not in l for kw in end_kwds), no_pre)
         filter_comments = ifilter(lambda l: ' % fs' not in l, no_post)
         arcs = [l.split()[:4] for l in filter_comments]
         return arcs
